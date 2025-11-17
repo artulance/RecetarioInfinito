@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+
+// Predefined category metadata (icon + color). Counts will be calculated from content.
+const categoryDefs = [
+  { id: 'desayunos', icon: 'coffee', name: 'Desayunos', color: 'bg-orange-100 text-orange-600' },
+  { id: 'platos-principales', icon: 'pizza', name: 'Platos Principales', color: 'bg-red-100 text-red-600' },
+  { id: 'sopas', icon: 'soup', name: 'Sopas', color: 'bg-yellow-100 text-yellow-600' },
+  { id: 'ensaladas', icon: 'salad', name: 'Ensaladas', color: 'bg-green-100 text-green-600' },
+  { id: 'postres', icon: 'cake', name: 'Postres', color: 'bg-pink-100 text-pink-600' },
+  { id: 'bebidas', icon: 'drink', name: 'Bebidas', color: 'bg-blue-100 text-blue-600' },
+];
+
+const getIcon = (name: string) => {
+  const icons: Record<string, string> = {
+    coffee: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h12a4 4 0 0 1 4 4"/><path d="M12 5c0-1.657.895-3 2-3s2 1.343 2 3"/><path d="M3.17 9L8 14m0 0l4.83 5M8 14l-4.83-5M8 14l4.83 5"/>',
+    pizza: '<path d="M12 2L2 7v10a10 10 0 0 0 10 10 10 10 0 0 0 10-10V7z"/><path d="M12 2v20M2 7h20M12 12l-5 5M12 12l5 5"/>',
+    soup: '<path d="M12 2c-5.33 0-9 1.79-9 4v12c0 2.21 3.67 4 9 4s9-1.79 9-4V6c0-2.21-3.67-4-9-4Z"/><path d="M3 6h18M9 12h2M8 16h4M7 20h5"/>',
+    salad: '<path d="M7 11h10m-5-6V2m-8 9a7 7 0 1 0 14 0H4z"/><path d="M9 15l2 2 4-4"/>',
+    cake: '<path d="M12 2v6m-5-4a3 3 0 0 0-3 3v8a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-8a3 3 0 0 0-3-3M8 6h8M8 12h8M8 18h8"/>',
+    drink: '<path d="M6.4 14.4V20a2 2 0 0 0 2 2h7.2a2 2 0 0 0 2-2v-5.6M6.4 14.4h11.2M6.4 14.4L9.7 7h4.6L15.6 14.4M9.7 7L11 4h2l1.3 3M11 11h2"/>',
+  };
+  return icons[name] || icons.coffee;
+};
+
+// Fetch recipes and calculate category counts dynamically (normalize keys)
+const posts = await getCollection('recetas');
+const countsRaw: Record<string, number> = {};
+for (const p of posts) {
+  // Handle both array and undefined categories
+  const cats = Array.isArray(p.data.categories) ? p.data.categories : [];
+  console.log(`Post: ${p.id}, categories:`, cats);
+  for (const c of cats) {
+    const key = String(c).trim();
+    if (!key) continue;
+    countsRaw[key] = (countsRaw[key] ?? 0) + 1;
+  }
+}
+console.log('countsRaw:', countsRaw);
+
+// Build a case-insensitive map to merge counts even if frontmatter has minor differences
+const countsNormalized: Record<string, { name: string; count: number }> = {};
+for (const [name, cnt] of Object.entries(countsRaw)) {
+  const k = name.toLowerCase();
+  if (!countsNormalized[k]) countsNormalized[k] = { name, count: cnt };
+  else countsNormalized[k].count += cnt;
+}
+
+// slugify helper to map names -> ids (remove diacritics, non-alnum -> dash)
+const slugify = (s: string) =>
+  String(s)
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/(^-|-$)/g, '')
+    .toLowerCase();
+
+// Helper to get count for a category name or id (case-insensitive + slug match)
+const getCountFor = (nameOrId: string) => {
+  const k = String(nameOrId).trim().toLowerCase();
+  // direct name match
+  if (countsNormalized[k]) return countsNormalized[k].count;
+  // try matching by slug (id)
+  for (const entry of Object.values(countsNormalized)) {
+    if (slugify(entry.name) === k || slugify(entry.name) === slugify(nameOrId)) return entry.count;
+  }
+  return 0;
+};
+
+// Build final categories array merging predefined defs with dynamic counts (use id then name)
+const categories = [...categoryDefs.map(d => ({ ...d, count: getCountFor(d.id) || getCountFor(d.name) }))];
+
+// Add any categories found in content that are not in predefined list (generate id)
+for (const { name, count } of Object.values(countsNormalized)) {
+  const id = slugify(name);
+  if (!categories.find(c => c.id && c.id.toLowerCase() === id)) {
+    categories.push({ id, icon: 'drink', name, color: 'bg-gray-100 text-gray-700', count });
+  }
+}
+
+// Optional: sort categories by count descending so popular categories appear first
+categories.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+---
+
+<section class="py-20 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">
+        Explora por Categorías
+      </h2>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Encuentra exactamente lo que buscas navegando por nuestras categorías
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      {categories.map((category) => (
+          <div data-cat-id={category.id} role="button" tabindex="0" aria-pressed="false" class="bg-white rounded-2xl p-6 text-center hover:shadow-xl transition-all transform hover:-translate-y-2 cursor-pointer category-filter">
+            <div class={`inline-flex items-center justify-center w-16 h-16 ${category.color} rounded-xl mb-4`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8" set:html={getIcon(category.icon)}></svg>
+            </div>
+            <h3 class="font-semibold text-gray-900 mb-1">
+              {category.name}
+            </h3>
+            <p class="text-sm text-gray-500">
+              {category.count} recetas
+            </p>
+          </div>
+        ))}
+    </div>
+  </div>
+</section>

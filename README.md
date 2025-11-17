@@ -1,50 +1,31 @@
-# Astro Starter Kit: Blog
+# 🍲 Recetario Infinito
 
-```sh
-bun create astro@latest -- --template blog
-```
+Un sitio web de recetas construido con Astro, diseñado para compartir y explorar recetas organizadas por categorías.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
+## 🚀 Estructura del Proyecto
 
 ```text
-├── public/
+├── public/              # Archivos estáticos (imágenes, fuentes)
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
+│   ├── components/      # Componentes reutilizables (Header, Footer, Categories)
+│   ├── content/         # Colecciones de contenido (recetas, solicitadas)
+│   │   ├── recetas/     # Archivos .md de recetas
+│   │   └── solicitadas/ # Recetas solicitadas por usuarios
+│   ├── layouts/         # Layouts de página
+│   ├── pages/           # Rutas del sitio
+│   ├── scripts/         # Scripts JavaScript
+│   ├── styles/          # Estilos globales
+│   ├── consts.ts        # Constantes del sitio
+│   └── content.config.ts # ⭐ CONFIGURACIÓN DE COLECCIONES
+├── astro.config.mjs     # Configuración de Astro
 ├── package.json
 └── tsconfig.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 🧞 Comandos
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
+| Comando                   | Acción                                           |
 | :------------------------ | :----------------------------------------------- |
 | `bun install`             | Installs dependencies                            |
 | `bun dev`             | Starts local dev server at `localhost:4321`      |
@@ -53,10 +34,3 @@ All commands are run from the root of the project, from a terminal:
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).

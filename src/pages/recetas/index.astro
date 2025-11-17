@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import Categories from '../../components/Categories.astro';
+
+const posts = (await getCollection('recetas')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+// slugify helper (matches Categories.astro)
+const slugify = (s: string) =>
+	String(s)
+		.normalize('NFD')
+		.replace(/\p{Diacritic}/gu, '')
+		.replace(/[^\p{L}\p{N}]+/gu, '-')
+		.replace(/(^-|-$)/g, '')
+		.toLowerCase();
+
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`${SITE_TITLE} - Recetas`} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<Categories />
+		<main class="max-w-4xl mx-auto p-8">
+			<h1 class="text-4xl font-bold mb-8 text-center">🍲 Nuestras Recetas</h1>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none m-0 p-0">
+				{
+				posts.map((post) => {
+					const cats = Array.isArray(post.data.categories) ? post.data.categories.map(c => slugify(String(c))).filter(Boolean) : [];
+					const catsAttr = cats.join(',');
+					return (
+						<li data-cats={catsAttr} class="recipe-item first:col-span-full first:mb-8 first:text-center">
+							<a href={`/recetas/${post.id}/`} class="block no-underline transition-all duration-200 hover:scale-105">
+								{post.data.heroImage && (
+									<Image width={720} height={360} src={post.data.heroImage} alt="" class="w-full rounded-xl mb-2" />
+								)}
+								<h4 class="text-2xl font-bold m-0 text-gray-900">{post.data.title}</h4>
+								<p class="text-gray-600 m-0">
+									<FormattedDate date={post.data.pubDate} />
+								</p>
+							</a>
+						</li>
+					)
+				})
+				}
+			</ul>
+
+			<!-- Client-side category filter script: toggles visibility of recipes when categories are clicked. -->
+			<script>
+				(() => {
+					const catEls = Array.from(document.querySelectorAll('[data-cat-id]'));
+					const postEls = Array.from(document.querySelectorAll('ul > li[data-cats]'));
+					if (!catEls.length || !postEls.length) return;
+
+					const update = () => {
+						const active = catEls.filter(el => el.getAttribute('aria-pressed') === 'true').map(el => el.getAttribute('data-cat-id'));
+						if (!active.length) {
+							postEls.forEach(p => p.classList.remove('hidden'));
+							return;
+						}
+						postEls.forEach(p => {
+							const cats = (p.getAttribute('data-cats') || '').split(',').map(s => s.trim()).filter(Boolean);
+							const match = cats.some(c => active.includes(c));
+							if (match) p.classList.remove('hidden'); else p.classList.add('hidden');
+						});
+					};
+
+					catEls.forEach(el => {
+						const toggle = () => {
+							const pressed = el.getAttribute('aria-pressed') === 'true';
+							el.setAttribute('aria-pressed', String(!pressed));
+							el.classList.toggle('ring-2');
+							el.classList.toggle('ring-indigo-300');
+							update();
+						};
+						el.addEventListener('click', toggle);
+						el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+					});
+
+					// Escape key clears selection
+					document.addEventListener('keydown', (e) => {
+						if (e.key === 'Escape') {
+							catEls.forEach(el => { el.setAttribute('aria-pressed', 'false'); el.classList.remove('ring-2', 'ring-indigo-300'); });
+							update();
+						}
+					});
+				})();
+			</script>
+		</main>
+		<Footer />
+	</body>
+</html>

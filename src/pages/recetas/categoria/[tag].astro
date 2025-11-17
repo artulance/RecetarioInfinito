@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../../consts';
+import { Image } from 'astro:assets';
+
+// slugify helper (matches other files)
+const slugify = (s: string) =>
+  String(s)
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/(^-|-$)/g, '')
+    .toLowerCase();
+
+export async function getStaticPaths() {
+  const postsRaw = await getCollection('recetas');
+
+  // Build a serializable posts array (only primitive fields)
+  const posts = postsRaw.map(p => ({
+    id: p.id,
+    data: {
+      title: p.data.title,
+      pubDate: p.data.pubDate ? (p.data.pubDate instanceof Date ? p.data.pubDate.toISOString() : String(p.data.pubDate)) : null,
+      categories: (p.data.categories ?? []).map(String),
+      heroImage: p.data.heroImage ? String(p.data.heroImage) : null,
+    }
+  }));
+
+  const map = new Map();
+  for (const p of posts) {
+    for (const c of p.data.categories) {
+      const id = slugify(c);
+      if (!map.has(id)) map.set(id, true);
+    }
+  }
+
+  // Return params + posts in props (serializable)
+  return Array.from(map.keys()).map(tag => ({ params: { tag }, props: { posts } }));
+}
+
+const { posts } = Astro.props;
+const tag = Astro.params.tag;
+const filteredPosts = (posts ?? []).filter(post => {
+  const cats = (post.data.categories ?? []).map(c => slugify(String(c)));
+  return cats.includes(tag);
+});
+
+// determine display name
+let name = tag;
+for (const p of posts ?? []) {
+  for (const c of p.data.categories) {
+    if (slugify(c) === tag) { name = String(c).trim(); break; }
+  }
+  if (name !== tag) break;
+}
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <BaseHead title={`${SITE_TITLE} — ${name || tag}`} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <Header />
+    <main class="max-w-4xl mx-auto p-8">
+      <h1 class="text-4xl font-bold mb-4">Categoría: {name || tag}</h1>
+      <p class="text-gray-600 mb-8">Mostrando {filteredPosts.length} receta(s) en esta categoría.</p>
+
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none m-0 p-0">
+        {
+          filteredPosts.map((post) => (
+            <li class="first:col-span-full first:mb-8 first:text-center">
+              <a href={`/recetas/${post.id}/`} class="block no-underline transition-all duration-200 hover:scale-105">
+                {post.data.heroImage && (
+                  <Image width={720} height={360} src={post.data.heroImage} alt="" class="w-full rounded-xl mb-2" />
+                )}
+                <h4 class="text-2xl font-bold m-0 text-gray-900">{post.data.title}</h4>
+                <p class="text-gray-600 m-0">
+                  <FormattedDate date={new Date(post.data.pubDate)} />
+                </p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </main>
+    <Footer />
+  </body>
+</html>

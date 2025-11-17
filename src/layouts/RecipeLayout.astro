@@ -1,0 +1,176 @@
+---
+import Header from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    description: string;
+    image: string;
+    difficulty: string;
+    time: string;
+    servings: number;
+    rating?: number;
+    author?: string;
+    pubDate?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+---
+
+<Header />
+
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <a href="/recetas" class="text-pink-500 hover:text-pink-600 font-medium mb-8 inline-block transition-colors">
+      ← Volver a inicio
+    </a>
+
+    <article>
+      <header class="mb-12">
+        <div class="flex flex-col md:flex-row gap-8 mb-8">
+          <div class="flex-1">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4 leading-tight">
+              {frontmatter.title}
+            </h1>
+            <p class="text-xl text-gray-600 leading-relaxed mb-6">
+              {frontmatter.description}
+            </p>
+
+            <div class="flex flex-wrap gap-6">
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-pink-500"><circle cx="12" cy="12" r="1"/><path d="M12 7v5m0 5v1"/></svg>
+                <div>
+                  <p class="text-sm text-gray-500">Tiempo</p>
+                  <p class="font-semibold text-gray-900">{frontmatter.time}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-pink-500"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div>
+                  <p class="text-sm text-gray-500">Porciones</p>
+                  <p class="font-semibold text-gray-900">{frontmatter.servings} personas</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-pink-500"><path d="M6 9c0-1 1-2 3-2s3 1 3 2c0 .99-1 2-3 2s-3-1-3-2Z"/><path d="M12 9c0-1 1-2 3-2s3 1 3 2c0 .99-1 2-3 2s-3-1-3-2Z"/><path d="M9 11.5v4a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3v-4"/></svg>
+                <div>
+                  <p class="text-sm text-gray-500">Dificultad</p>
+                  <p class="font-semibold text-gray-900">{frontmatter.difficulty}</p>
+                </div>
+              </div>
+
+              {frontmatter.rating && (
+                <div class="flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 fill-yellow-400 text-yellow-400"><polygon points="12 2 15.09 10.26 24 10.26 17.55 16.61 19.64 24.87 12 19.52 4.36 24.87 6.45 16.61 0 10.26 8.91 10.26 12 2"/></svg>
+                  <div>
+                    <p class="text-sm text-gray-500">Valoración</p>
+                    <p class="font-semibold text-gray-900">{frontmatter.rating}</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {frontmatter.author && (
+              <div class="mt-6 pt-6 border-t border-gray-200">
+                <p class="text-sm text-gray-500 mb-2">Receta por</p>
+                <p class="font-medium text-gray-900">{frontmatter.author}</p>
+              </div>
+            )}
+
+            {frontmatter.pubDate && (
+              <div class="mt-2">
+                <p class="text-xs text-gray-400">
+                  Publicado el {new Date(frontmatter.pubDate).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div class="md:w-96 shrink-0">
+            <div class="relative">
+              <img
+                src={frontmatter.image}
+                alt={frontmatter.title}
+                class="w-full h-96 object-cover rounded-2xl shadow-lg"
+              />
+              <div class="absolute inset-0 rounded-2xl ring-1 ring-black/10"></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="prose prose-lg max-w-none">
+        <slot />
+      </div>
+    </article>
+  </div>
+</div>
+
+<Footer />
+
+<style is:global>
+  @import "tailwindcss"; /* para que funcione el apply en v4 */
+  .prose {
+    --tw-prose-body: rgb(55 65 81);
+    --tw-prose-headings: rgb(17 24 39);
+    --tw-prose-lead: rgb(75 85 99);
+    --tw-prose-links: rgb(236 72 153);
+    --tw-prose-bold: rgb(17 24 39);
+    --tw-prose-counters: rgb(107 114 128);
+    --tw-prose-bullets: rgb(209 213 219);
+    --tw-prose-hr: rgb(229 231 235);
+    --tw-prose-quotes: rgb(107 114 128);
+    --tw-prose-quote-borders: rgb(229 231 235);
+    --tw-prose-captions: rgb(107 114 128);
+    --tw-prose-code: rgb(17 24 39);
+    --tw-prose-pre-code: rgb(229 231 235);
+    --tw-prose-pre-bg: rgb(17 24 39);
+    --tw-prose-th-borders: rgb(209 213 219);
+    --tw-prose-td-borders: rgb(229 231 235);
+  }
+ 
+  .prose h2 {
+    @apply text-3xl font-bold text-gray-900 mt-12 mb-6 pt-4 border-t border-gray-200;
+  }
+
+  .prose h3 {
+    @apply text-2xl font-bold text-gray-900 mt-8 mb-4;
+  }
+
+  .prose p {
+    @apply text-gray-700 leading-relaxed my-4;
+  }
+
+  .prose li {
+    @apply text-gray-700 my-2;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply my-6 pl-6;
+  }
+
+  .prose a {
+    @apply text-pink-500 hover:text-pink-600 font-medium transition-colors;
+  }
+
+  .prose strong {
+    @apply font-bold text-gray-900;
+  }
+
+  .prose em {
+    @apply italic text-gray-700;
+  }
+
+  .prose-section {
+    @apply mb-12;
+  }
+</style>

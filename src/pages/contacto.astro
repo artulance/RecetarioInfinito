@@ -1,0 +1,29 @@
+---
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="Contacto y Privacidad"
+	description="Conoce los detalles de contacto"
+	pubDate={new Date('November 11 2025')}
+	heroImage={AboutHeroImage}
+>
+	<div class="mt-4 grid md:grid-cols-2 gap-6 max-w-4xl">
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-medium">Mis datos</h3>
+            <ul class="mt-2 text-sm space-y-1">
+                <li><strong>Nombre:</strong> Arturo</li>
+                <li><strong>Email:</strong><a href="mailto:simplelogin-newsletter.hastiness478@simplelogin.com">simplelogin-newsletter.hastiness478@simplelogin.com</a></li>
+
+            </ul>
+            <p class="text-xs text-gray-500 mt-3">Si quieres que ocultemos o borremos tus datos de una aportación, contacta y lo gestionamos.</p>
+        </div>
+
+        <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-medium">Privacidad</h3>
+            <p class="mt-2 text-sm">Solo guardamos la información mínima necesaria para procesar tu solicitud (nombre, email y mensaje). No compartimos datos con terceros sin tu consentimiento expreso.</p>
+        </div>
+    </div>
+
+</Layout>
