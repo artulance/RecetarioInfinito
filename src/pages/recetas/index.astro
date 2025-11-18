@@ -7,19 +7,12 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import Categories from '../../components/Categories.astro';
+import { slugify } from '../../lib/slugify';
 
 const posts = (await getCollection('recetas')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-// slugify helper (matches Categories.astro)
-const slugify = (s: string) =>
-	String(s)
-		.normalize('NFD')
-		.replace(/\p{Diacritic}/gu, '')
-		.replace(/[^\p{L}\p{N}]+/gu, '-')
-		.replace(/(^-|-$)/g, '')
-		.toLowerCase();
 
 ---
 

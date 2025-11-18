@@ -5,7 +5,7 @@ pubDate: 2025-11-13
 difficulty: Fácil
 time: "25 minutos"
 servings: 2
-categories: ["desayunos","Fusión"]
+categories: ["desayunos"]
 tags:
   - crepas
   - huevos

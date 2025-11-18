@@ -1,6 +1,6 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BlogPost from '../../layouts/BlogPost.astro';
+import RecipeLayout from '../../layouts/RecipeLayout.astro';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('recetas');
@@ -14,7 +14,16 @@ type Props = CollectionEntry<'recetas'>;
 const post = Astro.props;
 const { Content } = await render(post);
 ---
-
-<BlogPost {...post.data}>
+<RecipeLayout frontmatter={{
+	title: post.data.title,
+	description: post.data.description,
+	image: (post.data.heroImage ?? post.data.cover) ? String(post.data.heroImage.src ?? post.data.cover) : undefined,
+	difficulty: post.data.difficulty ?? undefined,
+	time: post.data.time ?? undefined,
+	servings: post.data.servings ?? undefined,
+	rating: post.data.rating ?? undefined,
+	author: post.data.author ?? undefined,
+	pubDate: post.data.pubDate ? String(post.data.pubDate) : undefined,
+}}>
 	<Content />
-</BlogPost>
+</RecipeLayout>

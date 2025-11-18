@@ -1,12 +1,12 @@
 ---
-layout: '../../layouts/RecipeLayout.astro'
+# layout: '../../layouts/RecipeLayout.astro'
 title: "Tacos de Atún Teriyaki con Guacamole de Wasabi"
 description: "Una fusión deliciosa entre México y Japón: tortillas de maíz con atún marinado en teriyaki y un guacamole cremoso con wasabi."
 pubDate: 2025-11-13
 difficulty: Intermedia
 time: "35 minutos"
 servings: 4
-categories: ["platos-principales","Fusión","Mariscos"]
+categories: ["platos-principales","pescado"]
 tags: ["atún", "tacos", "teriyaki", "guacamole"]
 heroImage: '../../assets/recetas/1-tacos-atun.jpg'
 ---

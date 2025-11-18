@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import { slugify } from '../../lib/slugify';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('recetas');
+  const found = new Map();
+  for (const p of posts) {
+    const cats = Array.isArray(p.data.categories) ? p.data.categories : p.data.categories ? [p.data.categories] : [];
+    for (const c of cats) {
+      const name = String(c).trim();
+      if (!name) continue;
+      found.set(slugify(name), name);
+    }
+  }
+
+  return Array.from(found.keys()).map((id) => ({ params: { id } }));
+}
+
+const params = Astro.params;
+const categoryId = params.id;
+
+const posts = await getCollection('recetas');
+
+// Filtrar posts que contienen la categoría (compara slugified)
+const filtered = posts.filter((p) => {
+  const cats = Array.isArray(p.data.categories) ? p.data.categories : p.data.categories ? [p.data.categories] : [];
+  return cats.some((c) => slugify(String(c)) === categoryId);
+});
+
+// Nombre legible de la categoría (toma la primera coincidencia encontrada)
+const displayName = (() => {
+  for (const p of posts) {
+    const cats = Array.isArray(p.data.categories) ? p.data.categories : p.data.categories ? [p.data.categories] : [];
+    for (const c of cats) {
+      if (slugify(String(c)) === categoryId) return String(c);
+    }
+  }
+  return categoryId;
+})();
+---
+
+<BaseHead title={`Recetas — ${displayName}`} description={`Recetas en la categoría ${displayName}`} />
+<Header />
+
+<main class="max-w-4xl mx-auto py-12 px-4">
+  <h1 class="text-3xl font-bold mb-4">{displayName}</h1>
+  <p class="text-gray-600 mb-8">Recetas etiquetadas con «{displayName}»</p>
+
+  {filtered.length === 0 ? (
+    <p class="text-gray-700">No hay recetas en esta categoría.</p>
+  ) : (
+    <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {filtered.map((post) => (
+        <li class="bg-white rounded-lg shadow p-4" key={post.id}>
+          <a class="block" href={`/recetas/${post.slug}`}>
+            <h2 class="text-lg font-semibold">{post.data.title}</h2>
+            {post.data.description ? <p class="text-sm text-gray-600 mt-1">{post.data.description}</p> : null}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</main>

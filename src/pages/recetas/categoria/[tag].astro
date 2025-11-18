@@ -7,14 +7,7 @@ import FormattedDate from '../../../components/FormattedDate.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../../consts';
 import { Image } from 'astro:assets';
 
-// slugify helper (matches other files)
-const slugify = (s: string) =>
-  String(s)
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .replace(/[^\p{L}\p{N}]+/gu, '-')
-    .replace(/(^-|-$)/g, '')
-    .toLowerCase();
+import { slugify } from '../../../lib/slugify';
 
 export async function getStaticPaths() {
   const postsRaw = await getCollection('recetas');

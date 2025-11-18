@@ -5,7 +5,7 @@ pubDate: 2025-12-03
 difficulty: Fácil
 time: "20 minutos"
 servings: 2
-categories: ["Fusión", "Entrante", "Pescado Crudo"]
+categories: ["Entrante", "pescado"]
 tags: ["Japón", "Perú", "Atún", "Nikkei", "Maracuyá", "Ceviche"]
 heroImage: '../../assets/recetas/10-lomo-atun.jpg'
 ---

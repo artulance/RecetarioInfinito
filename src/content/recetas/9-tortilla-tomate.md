@@ -5,7 +5,7 @@ pubDate: 2025-11-28
 difficulty: Intermedia
 time: "30 minutos"
 servings: 3
-categories: ["Fusión", "Desayuno", "Almuerzo"]
+categories: ["desayunos"]
 tags: ["Italia", "España", "Huevo", "Chorizo", "Tomate Seco"]
 heroImage: '../../assets/recetas/9-tortilla-tomate.jpg'
 ---

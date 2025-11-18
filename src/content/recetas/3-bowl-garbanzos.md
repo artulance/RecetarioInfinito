@@ -5,7 +5,7 @@ pubDate: 2025-11-13
 difficulty: Fáci
 time: "20 minutos"
 servings: 2
-categories: ["desayuno", "vegano", "fusión"]
+categories: ["desayunos", "vegetarian"]
 tags: 
   - garbanzos
   - pepino

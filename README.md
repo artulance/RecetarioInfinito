@@ -34,3 +34,8 @@ Un sitio web de recetas construido con Astro, diseñado para compartir y explora
 | `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `bun astro -- --help` | Get help using the Astro CLI                     |
 
+## Iconografía 
+Svg sacados de Lucide / Tabler / Feather / Heroicons
+
+## Imágenes
+Generadas con google gemini y chatagpt pro

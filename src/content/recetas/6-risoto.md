@@ -5,7 +5,7 @@ pubDate: 2025-11-17
 difficulty: Intermedia
 time: "40 minutos"
 servings: 4
-categories: ["Fusión", "Arroces", "Plato Principal"]
+categories: ["platos-principales"]
 tags: ["Italia", "Corea", "España", "Picante", "Umami"]
 heroImage: '../../assets/recetas/6-risoto.jpg'
 ---

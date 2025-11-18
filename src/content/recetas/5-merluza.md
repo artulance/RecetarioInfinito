@@ -5,7 +5,7 @@ pubDate: 2025-11-13
 difficulty: Fácil
 time: "35 minutos"
 servings: 2
-categories: ["Cocina Española"]
+categories: ["platos-principales","pescado"]
 tags: 
   - merluza
   - pimientos

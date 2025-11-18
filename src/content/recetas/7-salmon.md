@@ -5,7 +5,7 @@ pubDate: 2025-11-20
 difficulty: Intermedia
 time: "35 minutos"
 servings: 2
-categories: ["Fusión", "Pescados", "Plato Principal"]
+categories: ["pescado", "pescado"]
 tags: ["Nórdico", "Japón", "Salmón", "Umami", "Fresco"]
 heroImage: '../../assets/recetas/7-salmon.jpg'
 ---

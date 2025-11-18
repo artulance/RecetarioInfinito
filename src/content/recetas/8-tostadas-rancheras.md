@@ -5,7 +5,7 @@ pubDate: 2025-11-25
 difficulty: Fácil
 time: "20 minutos"
 servings: 2
-categories: ["Fusión", "Desayuno", "Vegetariano"]
+categories: ["desayunos", "vegetarian"]
 tags: ["México", "Mediterráneo", "Aguacate", "Feta", "Picante"]
 heroImage: '../../assets/recetas/8-tostadas-rancheras.jpg'
 ---
