@@ -63,7 +63,7 @@ const displayName = (() => {
     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {filtered.map((post) => (
         <li class="bg-white rounded-lg shadow p-4" key={post.id}>
-          <a class="block" href={`/recetas/${post.id}/`}>
+          <a class="block" href={`${import.meta.env.BASE_URL}recetas/${post.id}/`}>
             <h2 class="text-lg font-semibold">{post.data.title}</h2>
             {post.data.description ? <p class="text-sm text-gray-600 mt-1">{post.data.description}</p> : null}
           </a>

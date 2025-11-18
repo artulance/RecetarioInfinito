@@ -33,7 +33,7 @@ const posts = (await getCollection('recetas')).sort(
 					const catsAttr = cats.join(',');
 					return (
 						<li data-cats={catsAttr} class="recipe-item first:col-span-full first:mb-8 first:text-center">
-							<a href={`/recetas/${post.id}/`} class="block no-underline transition-all duration-200 hover:scale-105">
+							<a href={`${import.meta.env.BASE_URL}recetas/${post.id}/`} class="block no-underline transition-all duration-200 hover:scale-105">
 								{post.data.heroImage && (
 									<Image width={720} height={360} src={post.data.heroImage} alt="" class="w-full rounded-xl mb-2" />
 								)}
