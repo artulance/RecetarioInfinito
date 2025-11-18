@@ -1,8 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import { slugify } from '../../lib/slugify';
+import BaseHead from '../../../components/BaseHead.astro';
+import Header from '../../../components/Header.astro';
+import { slugify } from '../../../lib/slugify';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../../consts';
+import Footer from '../../../components/Footer.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('recetas');
@@ -41,9 +43,15 @@ const displayName = (() => {
   return categoryId;
 })();
 ---
+<!doctype html>
+<html lang="es">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		
+	</head>
+	<body>
+		<Header />
 
-<BaseHead title={`Recetas — ${displayName}`} description={`Recetas en la categoría ${displayName}`} />
-<Header />
 
 <main class="max-w-4xl mx-auto py-12 px-4">
   <h1 class="text-3xl font-bold mb-4">{displayName}</h1>
@@ -55,7 +63,7 @@ const displayName = (() => {
     <ul class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {filtered.map((post) => (
         <li class="bg-white rounded-lg shadow p-4" key={post.id}>
-          <a class="block" href={`/recetas/${post.slug}`}>
+          <a class="block" href={`/recetas/${post.id}/`}>
             <h2 class="text-lg font-semibold">{post.data.title}</h2>
             {post.data.description ? <p class="text-sm text-gray-600 mt-1">{post.data.description}</p> : null}
           </a>
@@ -64,3 +72,6 @@ const displayName = (() => {
     </ul>
   )}
 </main>
+		<Footer />
+	</body>
+</html>

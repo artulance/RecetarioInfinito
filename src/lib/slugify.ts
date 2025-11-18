@@ -6,3 +6,4 @@ export function slugify(s: string) {
     .replace(/(^-|-$)/g, '')
     .toLowerCase();
 }
+/* crear url y normalización de texto para url */
