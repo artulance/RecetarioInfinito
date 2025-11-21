@@ -21,7 +21,7 @@ const posts = (await getCollection('solicitadas')).sort(
 		<Header />
 		<main class="max-w-4xl mx-auto p-8">
 			<h1 class="text-4xl font-bold mb-4 text-center">🌟 Recetas propuestas</h1>
-			<p class="text-center mb-8 text-gray-700">¿Necesitas algo que se ajuste a ti? Proponlo en la sección de <a href="solicitud" target="_self"  class="underline"  title="Apartado propuestas">propuestas</a> y lo haremos realidad. Evaluaremos tu propuesta</p>
+			<p class="text-center mb-8 text-gray-700">¿Necesitas algo que se ajuste a ti? Proponlo en la sección de <a href={`${import.meta.env.BASE_URL}solicitud`} target="_self"  class="underline"  title="Apartado propuestas">propuestas</a> y lo haremos realidad. Evaluaremos tu propuesta</p>
 			<ul class="grid grid-cols-1 md:grid-cols-2 gap-8 list-none m-0 p-0">
 				{
 					posts.map((post) => (
